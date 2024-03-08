@@ -1,9 +1,9 @@
-name: FTP Deployment
+name: FTP Deployment (Test)
 
 on:
   push:
     branches:
-      - main  # Change this to match your branch name
+      - develop  # Change this to match your branch name
 
 jobs:
   deploy:
