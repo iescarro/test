@@ -1,21 +1,29 @@
-name: FTP Deployment (Test)
+name: Deploy to FTP
 
 on:
   push:
     branches:
-      - develop  # Change this to match your branch name
+      - main # Adjust the branch name as needed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
 
-    - name: FTP files
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
+      - name: Set up FTP deployment
+        uses: SamKirkland/FTP-Deploy-Action@4.2.1
+        with:
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./ # Adjust this to the directory you want to deploy
+          git-ftp-args: "--exclude *.cs" # Exclude .cs files from being deployed
+
+      - name: Upload files
+        run: |
+          echo "Deployment complete"
