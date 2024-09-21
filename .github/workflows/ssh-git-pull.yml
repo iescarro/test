@@ -13,7 +13,7 @@ jobs:
       - name: Setup SSH
         run: |
           set -x  # Enable debug mode
-          mkdir -p ~/.ssh || { echo "Failed to create .ssh directory"; exit 1; }
+          mkdir ~/.ssh || { echo "Failed to create .ssh directory"; exit 1; }
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa || { echo "Failed to write id_rsa"; exit 1; }
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub || { echo "Failed to write id_rsa.pub"; exit 1; }
           chmod 600 ~/.ssh/id_rsa || { echo "Failed to set permissions on id_rsa"; exit 1; }
