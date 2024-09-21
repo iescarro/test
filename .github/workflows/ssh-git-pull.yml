@@ -8,17 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Setup SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-          chmod 600 ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa.pub
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+          set -x  # Enable debug mode
+          mkdir -p ~/.ssh || { echo "Failed to create .ssh directory"; exit 1; }
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa || { echo "Failed to write id_rsa"; exit 1; }
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub || { echo "Failed to write id_rsa.pub"; exit 1; }
+          chmod 600 ~/.ssh/id_rsa || { echo "Failed to set permissions on id_rsa"; exit 1; }
+          chmod 600 ~/.ssh/id_rsa.pub || { echo "Failed to set permissions on id_rsa.pub"; exit 1; }
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts || { echo "Failed to add host to known_hosts"; exit 1; }
+          chmod 644 ~/.ssh/known_hosts || { echo "Failed to set permissions on known_hosts"; exit 1; }
         env:
           USERNAME: ${{ secrets.USERNAME }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -28,7 +29,7 @@ jobs:
 
       - name: SSH and Git pull
         run: |
-          ssh -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd ~/domains/iceithq.com/public_html/test && git pull origin main"
+          ssh -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd ~/domains/iceithq.com/public_html/test && git pull origin main" || { echo "SSH command failed"; exit 1; }
         env:
           USERNAME: ${{ secrets.USERNAME }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
