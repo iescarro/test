@@ -1,0 +1,20 @@
+{
+    "name": "ian/test",
+    "autoload": {
+        "psr-4": {
+            "Ian\\Test\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ian",
+            "email": "ian.escarro@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "deployer/deployer": "^7.4"
+    },
+    "require": {
+        "iescarro/ignite": "^0.4.1"
+    }
+}
