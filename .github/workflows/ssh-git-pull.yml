@@ -1,0 +1,21 @@
+name: SSH and Git Pull
+
+on:
+  push:
+    branches:
+      - main # Trigger the action when you push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH into server and git pull
+        run: |
+          ssh -p 65002 u563318964@185.229.114.148 "cd ~/domains/iceithq.com/public_html/test && git pull origin main"
