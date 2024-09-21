@@ -19,7 +19,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa || { echo "Failed to set permissions on id_rsa"; exit 1; }
           chmod 600 ~/.ssh/id_rsa.pub || { echo "Failed to set permissions on id_rsa.pub"; exit 1; }
           echo "Connecting to ssh -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}"
-          ping -c 4 ${{ secrets.HOST }} || { echo "Failed to reach host"; exit 1; }
+          ping -c 4 185.229.114.148 || { echo "Failed to reach host"; exit 1; }
           ssh-keyscan -H 185.229.114.148 >> ~/.ssh/known_hosts || { echo "Failed to add host to known_hosts"; exit 1; }
           chmod 644 ~/.ssh/known_hosts || { echo "Failed to set permissions on known_hosts"; exit 1; }
         env:
