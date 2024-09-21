@@ -18,7 +18,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 185.229.114.148 >> ~/.ssh/known_hosts
+
+          # Try testing the SSH connection
+          echo "Testing SSH connection to your server..."
+          ssh-keyscan -T 60 -H 185.229.114.148
+          ssh -o StrictHostKeyChecking=no u563318964@185.229.114.148 "exit"
 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
