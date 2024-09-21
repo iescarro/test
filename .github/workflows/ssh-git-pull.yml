@@ -7,11 +7,27 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Executing remote ssh commands using key
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
-          script: whoami
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          HOST: ${{ secrets.HOST }}
+
+      - name: SSH and git pull
+        run: |
+          ssh -p $PORT $USERNAME@$HOST "cd ~/domains/iceithq.com/public_html/test && git pull origin main"
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          HOST: ${{ secrets.HOST }}
